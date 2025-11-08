@@ -11,52 +11,53 @@ public class APCalendar {
         }
         return false;
     }
+
     public static int numberOfLeapYears(int year1, int year2) {
-        int x = 0;
+        int counter_leapyear = 0;
         int i = year1;
         while (i <= year2) {
             if (isLeapYear(i)) {
-                x++;
+                counter_leapyear++;
             }
             i++;
         }
-        return x;
+        return counter_leapyear;
     }
+
     private static int firstDayOfYear(int year) {
-        int x = 2025;
-        int i = 3;
-        if (x > year) {
-            while (x > year){
-                x-=1;
-                if (i <= 0) {
-                    i = 7;
+        int base_year = 2025;
+        int day_of_week = 3; //0 = Sunday
+        if (base_year > year) {
+            while (base_year > year) {
+                base_year -= 1;
+                if (day_of_week <= 0) {
+                    day_of_week = 7;
                 }
-                if (isLeapYear(x)) {
-                    if (i == 1) {
-                        i = 8;
+                if (isLeapYear(base_year)) {
+                    if (day_of_week == 1) {
+                        day_of_week = 8;
                     }
-                    i -= 2;
-                }
-                else i -= 1;
+                    day_of_week -= 2;
+                } else day_of_week -= 1;
             }
         }
-        if (x < year) {
-            while (x < year) {
-                x++;
-                if (i >= 6) {
-                    i = -1;
+        if (base_year < year) {
+            while (base_year < year) {
+                base_year++;
+                if (day_of_week >= 6) {
+                    day_of_week = -1;
                 }
-                if (isLeapYear(x)) {
-                    if (i == 5) {
-                        i = -2;
+                if (isLeapYear(base_year)) {
+                    if (day_of_week == 5) {
+                        day_of_week = -2;
                     }
-                    i += 2;
-                }
-                else i++;
+                    day_of_week += 2;
+                } else day_of_week++;
             }
         }
-        return i;
+        return day_of_week;
     }
+
     private static int dayOfYear(int month, int day, int year) {
         int days = 0;
         int months = 1;
@@ -64,12 +65,10 @@ public class APCalendar {
             if (months == 2) {
                 if (isLeapYear(year)) {
                     days += 29;
-                }
-                else {
+                } else {
                     days += 28;
                 }
-            }
-            else {
+            } else {
                 if (((months % 2 == 1) && (months < 8)) || ((months % 2 == 0) && (months >= 8))) {
                     days += 31;
                 }
@@ -82,7 +81,8 @@ public class APCalendar {
         days += day;
         return days;
     }
-    public static int dayOfWeek (int month, int day, int year) {
+
+    public static int dayOfWeek(int month, int day, int year) {
         int days = dayOfYear(month, day, year) % 7;
         return firstDayOfYear(year) + days - 1;
     }
