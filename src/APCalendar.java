@@ -22,10 +22,10 @@ public class APCalendar {
         }
         return x;
     }
-    public static int firstDayOfYear(int year) {
+    private static int firstDayOfYear(int year) {
         int x = 2025;
         int i = 3;
-        if (x >= 0) {
+        if (x > year) {
             while (x > year){
                 x-=1;
                 if (i <= 0) {
@@ -40,23 +40,42 @@ public class APCalendar {
                 else i -= 1;
             }
         }
+        if (x < year) {
+            while (x < year) {
+                x++;
+                if (i >= 6) {
+                    i = -1;
+                }
+                if (isLeapYear(x)) {
+                    if (i == 5) {
+                        i = -2;
+                    }
+                    i += 2;
+                }
+                else i++;
+            }
+        }
         return i;
     }
-    public static int dayOfYear(int month, int day, int year) {
+    private static int dayOfYear(int month, int day, int year) {
         int days = 0;
         int months = 1;
-        while ((month - months) > 0 && (months < 11)) {
+        while ((month - months) > 0 && (months < 12)) {
             if (months == 2) {
                 if (isLeapYear(year)) {
                     days += 29;
                 }
-                days += 28;
+                else {
+                    days += 28;
+                }
             }
-            if (((months % 2 == 1) && (months < 9)) || ((months % 2 == 0) && (months > 8))) {
-                days += 31;
-            }
-            if (((months % 2 == 0) && (months < 9)) || ((months % 2 == 1) && (months > 8))) {
-                days += 30;
+            else {
+                if (((months % 2 == 1) && (months < 8)) || ((months % 2 == 0) && (months >= 8))) {
+                    days += 31;
+                }
+                if (((months % 2 == 0) && (months < 8)) || ((months % 2 == 1) && (months >= 8))) {
+                    days += 30;
+                }
             }
             months++;
         }
@@ -64,6 +83,7 @@ public class APCalendar {
         return days;
     }
     public static int dayOfWeek (int month, int day, int year) {
-        return 0;
+        int days = dayOfYear(month, day, year) % 7;
+        return firstDayOfYear(year) + days - 1;
     }
 }
